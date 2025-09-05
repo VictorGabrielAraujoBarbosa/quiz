@@ -109,4 +109,20 @@ def test_sets_multiple_invalid_choices_as_correct():
     choice3 = question.add_choice('false choice', is_correct=False)
     with pytest.raises(Exception):
         question.set_correct_choices([choice1.id, -1, choice3.id])
-    
+
+@pytest.fixture
+def question():
+    question = Question("question 1", points=15, max_selections=1)
+    question.add_choice("correct choice", is_correct=True)
+    question.add_choice("incorrect choice", is_correct=False)
+    return question
+
+def test_correct_invalid_number_of_choices(question):
+    with pytest.raises(Exception):
+        question.correct_selected_choices([question.choices[0].id, Question.choices[1].id])
+
+def test_correct_selected_choices(question):
+    answers = question.correct_selected_choices([question.choices[0].id])
+    assert answers[0] == question.choices[0].id
+        
+  
